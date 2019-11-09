@@ -1,0 +1,123 @@
+数据库的操作：
+
+显示数据库：
+  show databases;
+  
+创建数据库：
+1.直接创建
+  create database bd_name;
+2.系统若是没有名为 test1 的数据库则创建，若有则不创建
+  create database if not exists test1;
+
+使用数据库：
+  use 数据库名；
+
+删除数据库：
+  drop database [if exists] db_name;
+  说明：删除数据库后内部看不到对应的数据库，
+        里面的表和数据全部被删除。
+
+
+表的操作：
+
+首先使用存在该表的数据库
+  use db_name;
+ 
+创建表：
+  create table table_name(
+  field1 datatype,    
+  field2 datatype
+  )
+  
+  create table student(
+  id int,
+  name varchar(20) comment '姓名', 
+  password varchar(50) comment '密码',  
+  age int,   
+  sex varchar(1), 
+  birthday timestamp,   
+  amout decimal(13,2),   
+  resume text 
+  );
+  
+  CREATE TABLE student ( 
+  id INT,    
+  sn INT comment '学号', 
+  name VARCHAR(20) comment '姓名',    
+  qq_mail VARCHAR(20) comment 'QQ邮箱' ,
+  chinese DECIMAL(3,1),    
+  math DECIMAL(3,1),    
+  english DECIMAL(3,1)
+  );
+  
+  //comment 增加字段说明
+  
+查看表：
+  desc 表名;
+  
+删除表：
+  drop table [if exists] table_name [,table_name];
+  
+  drop table student;
+  drop table if exists student;
+
+
+
+表的增删改查:
+
+新增Create：
+1.单行数据+全列插入
+  数量必须和定义表的列的数量及顺序一致 
+  insert into student values(101, 10001, '孙悟空', '11111');
+2.多行数据+指定列插入
+  数量必须和定义表的列的数量及顺序一致
+  insert into student(id,sn,name) values
+   (102, 20001, '曹孟德'),   
+   (103, 20002, '孙仲谋');
+   
+查询Retrieve:
+1.全列查询
+  select * from student;
+2.指定列查询
+  select id,name from student;
+3.查询字段为表达式
+  select id,name,english + 10 from student;
+4.别名
+  select id,name,chinese + math 总分 from student;
+5.去重Distinct
+  select distinct chinese from student;
+6.排序order by
+  ASC升序(默认)
+  DESC降序
+  select name,math from student order by math;
+  select name,math from student order by math desc;
+7.条件查询where
+  基本查询
+  select name,english from student where english > 80;
+  
+  and与or : and优先级大于or
+  
+  查询范围
+  between...and...
+  in(一组数据)
+  
+  模糊查询like
+  SELECT name FROM exam_result WHERE name LIKE '孙%';-- 匹配到孙悟空、孙权 
+  --  _ 匹配严格的一个任意字符
+  SELECT name FROM exam_result WHERE name LIKE '孙_';-- 匹配到孙权
+  SELECT name FROM exam_result WHERE name LIKE '孙__';--孙悟空
+8.分页查询limit
+  -- 起始下标为 0
+  -- 从 0 开始，筛选 n 条结果
+  SELECT ... FROM table_name [WHERE ...] [ORDER BY ...] LIMIT n;
+  -- 从 s 开始，筛选 n 条结果
+  SELECT ... FROM table_name [WHERE ...] [ORDER BY ...] LIMIT n OFFSET s;
+  
+修改Update：
+  update student set math = 80 where name = '孙悟空';
+  -- 将总成绩倒数前三的 3 位同学的英语成绩加上10 
+  update student set english+10 order by chinese + math + english limit 3;
+  
+删除Delete：
+  delete from table_name [WHERE ...] [ORDER BY ...] [LIMIT ...]
+  delete from 表名 where 条件;
